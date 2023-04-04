@@ -1,33 +1,34 @@
 import React from 'react';
+import {dataType} from './App';
 
-type TaksPropsType = {
-  state: any
-  removeTask: any
+type TasksPropsType = {
+  state: dataType
+  removeTask: (id: number) => void
+  statusTasks: (id: string) => void
 }
 
-const Tasks: React.FC<TaksPropsType> = (props) => {
-  const listOfTasks = props.state.map((t: any) => {
+const Tasks = (props: TasksPropsType) => {
+
+  const listOfTask = props.state.map(task => {
     return <li>
-      <input type="checkbox" checked={t.isDone}/>
-      <span> {t.title} </span>
+      <input type="checkbox" checked={task.isDone}/>
+      <span> {task.title} </span>
       <button onClick={() => {
-        props.removeTask(t.taskId)
-      }
-      }>х
+        props.removeTask(task.taskId)
+      }}>x
       </button>
     </li>
   })
 
-
   return (<div>
     <h1>What to do</h1>
     <ul>
-      {listOfTasks}
+      {listOfTask}
     </ul>
     <div>
-      <button>All</button>
-      <button>Active</button>
-      <button>Completed</button>
+      <button onClick={()=>{props.statusTasks('All')} }>All</button>
+      <button onClick={()=>{props.statusTasks('Active')} }>Active</button>
+      <button onClick={()=>{props.statusTasks('Completed')} }>Completed</button>
     </div>
   </div>)
 }

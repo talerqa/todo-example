@@ -2,33 +2,55 @@ import React, {useState} from 'react';
 import './App.css';
 import Tasks from './Task';
 
-export type TasksDataType = {
+type taskType = {
   taskId: number
   title: string
   isDone: boolean
 }
 
-export type DataType = Array<TasksDataType>
+export type dataType = Array<taskType>
 
+type StatusTasksType = 'All' | 'Active' | 'Completed'
 
 function App() {
-  const data: DataType = [
-      {taskId: 1, title: 'Homework', isDone: true},
-      {taskId: 2, title: 'Pushups', isDone: true},
-      {taskId: 3, title: 'Reading', isDone: true},
-      {taskId: 4, title: 'Breathe practice', isDone: true},
-      {taskId: 5, title: 'Jogging', isDone: true},
-    ]
+  const data: dataType = [
+    {taskId: 1, title: 'Homework', isDone: true},
+    {taskId: 2, title: 'Pushups', isDone: false},
+    {taskId: 3, title: 'Reading', isDone: true},
+    {taskId: 4, title: 'Breathe practice', isDone: false},
+    {taskId: 5, title: 'Jogging', isDone: true},
+  ]
 
-  const [task, setTask] = useState(data);
-
-  const removeTask: any = (id: number) => {
-    setTask(task.filter(t => t.taskId !== id))
+  const [tasks, setTasks] = useState(data);
+  const removeTask = (id: number) => {
+    setTasks(tasks.filter(task => task.taskId !== id))
   }
-  console.log(task)
+
+  const [filter, setFilter] = useState ('All');
+
+  const statusTasks = (filter: any) => {
+    setFilter(filter)
+  }
+
+  const taskWhatIWantGet = (tasks: any, filter: any) => {
+    if (filter === 'Active') {
+      return tasks.filter((t: any) => t.isDone !== true)
+    } else if (filter === 'Completed') {
+      return tasks.filter((t: any) => t.isDone !== false)
+    } else {
+      return tasks
+    }
+  }
+
+  const taskWhatIWantSee = taskWhatIWantGet(tasks, filter)
+
   return (
     <div className="App">
-      <Tasks state={task} removeTask={removeTask}/>
+      <Tasks
+        state={taskWhatIWantSee}
+        removeTask={removeTask}
+        statusTasks={statusTasks}
+      />
     </div>
   );
 
