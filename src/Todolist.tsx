@@ -45,6 +45,9 @@ export function Todolist(props: PropsType) {
             <button onClick={ () => { props.changeFilter("completed") } }>
                 Completed
             </button>
+            <button onClick={ () => { props.changeFilter("first-three-tasks") } }>
+                first three tasks
+            </button>
         </div>
     </div>
 }

@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import {Todolist} from './Todolist';
 
-export type FilterValuesType = 'all' | 'active' | 'completed' ;
+export type FilterValuesType = 'all' | 'active' | 'completed' | 'first-three-tasks';
 
 //Hi guys!
 //1. Let's create a 'DELETE ALL TASKS' button, and place it above the filter buttons
@@ -44,33 +44,41 @@ function App() {
       setTasks([])
   }
 
-  function returnDeleteTasks() {
-    setTasks(tasks)
-  }
+    function returnDeleteTasks() {
+        setTasks(tasks)
+    }
 
-  let [filter, setFilter] = useState<FilterValuesType>('all');
+    let [filter, setFilter] = useState<FilterValuesType>('all');
 
-  let tasksForTodolist = tasks;
+    let tasksForTodolist = tasks;
 
-  if (filter === 'active') {
-    tasksForTodolist = tasks.filter(t => t.isDone === false);
-  }
+    if (filter === 'active') {
+        tasksForTodolist = tasks.filter(t => t.isDone === false);
+    }
 
-  function changeFilter(value: FilterValuesType) {
-    setFilter(value);
-  }
+    if (filter === 'completed') {
+        tasksForTodolist = tasks.filter(t => t.isDone === true);
+    }
 
-  return (
+    if (filter === 'first-three-tasks') {
+        tasksForTodolist = tasks.slice(0, 3)
+    }
 
-    <div className="App">
-      <Todolist title="What to learn"
-                tasks={tasksForTodolist}
-                removeTask={removeTask}
-                changeFilter={changeFilter}
-                returnDeleteTasks={returnDeleteTasks}
-                deleteAllTasks={deleteAllTasks}/>
-    </div>
-  );
+    function changeFilter(value: FilterValuesType) {
+        setFilter(value);
+    }
+
+    return (
+
+      <div className="App">
+          <Todolist title="What to learn"
+                    tasks={tasksForTodolist}
+                    removeTask={removeTask}
+                    changeFilter={changeFilter}
+                    returnDeleteTasks={returnDeleteTasks}
+                    deleteAllTasks={deleteAllTasks}/>
+      </div>
+    );
 }
 
 export default App;
