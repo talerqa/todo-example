@@ -1,85 +1,78 @@
-import * as React from 'react'
-import {ChangeEvent, KeyboardEvent} from 'react'
-import {changeStatusTasksType, tasksType} from './App';
+import {ChangeStatusTasksType, taskType} from './App';
+import * as React from 'react';
+import {ChangeEvent, FC} from 'react';
+import ButtonFilterStatus from './ButtonFilterStatus';
 
 type TodoListType = {
-  title: string
-  tasks: tasksType[]
+  todolistId: string
+  titleTodoList: string
+  titleFilter: ChangeStatusTasksType
+  task: taskType[]
   addTask: (title: string) => void
   removeTask: (id: string) => void
-  input: string
-  setTitle: (title: string) => void
   changeStatusTask: (currentStatusTask: boolean, id: string) => void
   changedInput: (e: ChangeEvent<HTMLInputElement>) => void
-  changedFilter: (filter: changeStatusTasksType) => void
-  deleteAllTasks: () => void
-  showDeleteTasks: () => void
+  changedFilter: (todolistId: string, filter: ChangeStatusTasksType) => void
 }
 
-const TodoList = (props: TodoListType) => {
 
-  const pressKeyHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-    event.key === 'Enter'
-    && props.addTask(props.input.trim())
+const TodoList: FC<TodoListType> = (props) => {
+  const {
+    todolistId,
+    titleTodoList,
+    titleFilter,
+    task,
+    addTask,
+    removeTask,
+    changeStatusTask,
+    changedInput,
+    changedFilter
+  } = props
+
+
+  const onChangeFilter = (todolistId: string, filter: ChangeStatusTasksType) => {
+    changedFilter(todolistId, filter)
+    console.log(todolistId, filter)
   }
 
   return (
-    <div className="todolist">
-      <h3>{props.title}</h3>
-      <div>
-        <input
-          onChange={props.changedInput}
-          onKeyDown={pressKeyHandler}
-          value={props.input}
-        />
-        <button
-          onClick={() => {
-            props.addTask(props.input.trim())
-          }}
-        >+
-        </button>
-      </div>
-      {props.tasks.map(t => {
-        return (<div>
-          <ul>
-            <li key={t.id} className={t.isDone && 'isDone'}>
-              {t.title}
-              <input
-                onChange={() => {
-                  props.changeStatusTask(t.isDone, t.id)
-                }}
-                type="checkbox"
-                checked={t.isDone}/>
-              <button
-                onClick={() => {
-                  props.removeTask(t.id)
-                }}
-              >х
-              </button>
-            </li>
-          </ul>
-        </div>)
-      })}
-      <button onClick={props.deleteAllTasks}
-      >Delete All tasks
-      </button>
-      <div>
-        <button onClick={() => {
-          props.changedFilter('all')
-        }}>All
-        </button>
-        <button onClick={() => {
-          props.changedFilter('active')
-        }}>Active
-        </button>
-        <button onClick={() => {
-          props.changedFilter('completed')
-        }}>Completed
-        </button>
-        <button onClick={props.showDeleteTasks}>
-          Show delete task's
-        </button>
-      </div>
+    <div>
+      <span>{titleTodoList}</span>
+      <button>X</button>
+      <ul>
+        <input type={'text'}/>
+        <button>+</button>
+        {task.map(task => {
+          return (<div key={task.id}
+                       style={{display: 'flex'}}>
+              <input type={'checkbox'}
+                     checked={task.isDone}
+                     onChange={() => {
+                     }}
+              />
+              <li style={{listStyleType: 'none'}}>{task.title}</li>
+            </div>
+          )
+        })
+        }
+      </ul>
+      <ButtonFilterStatus
+        filter={titleFilter}
+        callback={(filter) => onChangeFilter(todolistId, filter)}/>
+
+
+      {/*<button onClick={() => {*/}
+      {/*  changedFilter('all', todolistId)*/}
+      {/*}}>All tasks*/}
+      {/*</button>*/}
+      {/*<button onClick={() => {*/}
+      {/*  changedFilter('completed', todolistId)*/}
+      {/*}}>Completed*/}
+      {/*</button>*/}
+      {/*<button onClick={() => {*/}
+      {/*  changedFilter('active', todolistId)*/}
+      {/*}}>Active*/}
+      {/*</button>*/}
     </div>
   )
 }
