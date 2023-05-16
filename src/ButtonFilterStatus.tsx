@@ -29,16 +29,16 @@ const ButtonFilterStatus = (props: ButtonFilterStatusPropsType) => {
 
   return (
     <div>
-      {filterData.map(filter1 => {
+      {filterData.map(data => {
         return (
-          <div>
+
             <button onClick={() => {
-              props.callback(filter1.filter)
+              props.callback(data.filter)
             }
             }>
-              {filter1.title}
+              {data.title}
             </button>
-          </div>
+
         )
       })}
 

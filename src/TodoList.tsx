@@ -1,6 +1,6 @@
 import {ChangeStatusTasksType, taskType} from './App';
 import * as React from 'react';
-import {ChangeEvent, FC} from 'react';
+import {ChangeEvent, FC, useState} from 'react';
 import ButtonFilterStatus from './ButtonFilterStatus';
 
 type TodoListType = {
@@ -8,9 +8,9 @@ type TodoListType = {
   titleTodoList: string
   titleFilter: ChangeStatusTasksType
   task: taskType[]
-  addTask: (title: string) => void
-  removeTask: (id: string) => void
-  changeStatusTask: (currentStatusTask: boolean, id: string) => void
+  addTask: (todolistId: string, title: string) => void
+  removeTask: (todolistId: string, taskId: string) => void
+  changeStatusTask: (todolistId: string, taskId: string, statusTask: boolean) => void
   changedInput: (e: ChangeEvent<HTMLInputElement>) => void
   changedFilter: (todolistId: string, filter: ChangeStatusTasksType) => void
 }
@@ -29,10 +29,23 @@ const TodoList: FC<TodoListType> = (props) => {
     changedFilter
   } = props
 
+  const [title, setTitle] = useState('')
 
   const onChangeFilter = (todolistId: string, filter: ChangeStatusTasksType) => {
     changedFilter(todolistId, filter)
     console.log(todolistId, filter)
+  }
+
+  const onChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.currentTarget.value)
+  }
+
+  const addTaskHandler = (todolistId: string) => {
+    addTask(todolistId, title)
+  }
+
+  const removeTaskHandler = (todolistId: string, taskId: string) => {
+    removeTask(todolistId, taskId)
   }
 
   return (
@@ -40,17 +53,21 @@ const TodoList: FC<TodoListType> = (props) => {
       <span>{titleTodoList}</span>
       <button>X</button>
       <ul>
-        <input type={'text'}/>
-        <button>+</button>
+        <input type={'text'} value={title} onChange={onChangeInput}/>
+        <button onClick={()=> addTaskHandler(todolistId)}>+
+        </button>
         {task.map(task => {
           return (<div key={task.id}
                        style={{display: 'flex'}}>
               <input type={'checkbox'}
                      checked={task.isDone}
                      onChange={() => {
+                       changeStatusTask(todolistId, task.id, task.isDone)
                      }}
               />
               <li style={{listStyleType: 'none'}}>{task.title}</li>
+              <button onClick={() => removeTaskHandler(todolistId, task.id)}>x
+              </button>
             </div>
           )
         })
@@ -60,19 +77,6 @@ const TodoList: FC<TodoListType> = (props) => {
         filter={titleFilter}
         callback={(filter) => onChangeFilter(todolistId, filter)}/>
 
-
-      {/*<button onClick={() => {*/}
-      {/*  changedFilter('all', todolistId)*/}
-      {/*}}>All tasks*/}
-      {/*</button>*/}
-      {/*<button onClick={() => {*/}
-      {/*  changedFilter('completed', todolistId)*/}
-      {/*}}>Completed*/}
-      {/*</button>*/}
-      {/*<button onClick={() => {*/}
-      {/*  changedFilter('active', todolistId)*/}
-      {/*}}>Active*/}
-      {/*</button>*/}
     </div>
   )
 }

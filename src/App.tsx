@@ -40,36 +40,42 @@ function App() {
     ],
     [todolistId2]: [
       {id: v1(), title: 'Milk', isDone: true},
-      {id: v1(), title: 'React Book', isDone: true}
+      {id: v1(), title: 'Bread', isDone: true},
+      {id: v1(), title: 'Pee', isDone: false},
+      {id: v1(), title: 'Cucumber', isDone: false},
+      {id: v1(), title: 'Butter', isDone: true},
+      {id: v1(), title: 'Chocolate', isDone: true}
     ]
   });
 
 
-  const removeTask = (id: string) => {
-    // const removeTasks = tasks.filter(f => f.id === id)
-    // setTask(tasks.filter(f => f.id !== id))
-    // setDeleteTask([...deleteTasks, ...removeTasks])
+  const removeTask = (todolistId: string, taskId: string) => {
+      setTasks({
+        ...tasks,
+        [todolistId]: [...tasks[todolistId].filter(fl => fl.id !== taskId)]
+      })
   }
 
 
-  const changeStatusTask = (currentStatusTask: boolean, id: string) => {
-    // setTask(tasks.map(t => t.id === id ? {...t, isDone: !currentStatusTask} : t))
+  const changeStatusTask = (todolistId: string, taskId: string, statusTask: boolean) => {
+    setTasks({
+      ...tasks,
+      [todolistId]: [...tasks[todolistId].map(m => m.id === taskId
+        ? {...m, isDone: !statusTask} : m)]
+    })
   }
 
   const changedInput = (event: ChangeEvent<HTMLInputElement>) => {
     // setTitle(event.currentTarget.value)
   }
 
-  const addTask = (title: string) => {
-    // if (title.trim()) {
-    //   const newTask = {
-    //     id: v1(),
-    //     title: title,
-    //     isDone: false
-    //   }
-    //   setTask([newTask, ...tasks])
-    // }
-    // setTitle('')
+  const addTask = (todolistId: string, title: string) => {
+    let newTask = {id: v1(), title, isDone: false}
+
+    setTasks({
+      ...tasks,
+      [todolistId]: [...tasks[todolistId], newTask]
+    })
   }
 
   const changedFilter = (todolistId: string, filterValue: ChangeStatusTasksType) => {
