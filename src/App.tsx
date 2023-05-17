@@ -69,6 +69,12 @@ function App() {
     dispatchTasks(updateTitleSpaAC(todolistId, taskId, title))
   }
 
+  const changeTitleTodoList = (todolistId: string, title: string) => {
+    setTodolist(todolists.map( todolist => todolist.id === todolistId
+    ? {...todolist, title}
+    : todolist))
+  }
+
   return (
     <div className="App">
       {todolists.map(todolist => {
@@ -94,6 +100,7 @@ function App() {
             changeStatusTask={changeStatusTask}
             changeTitleSpan={updateTitleSpan}
             changedFilter={changedFilter}
+            changeTitleTodoList={changeTitleTodoList}
           />)
         }
       )}

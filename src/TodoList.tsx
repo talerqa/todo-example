@@ -14,6 +14,7 @@ type TodoListType = {
   changeStatusTask: (todolistId: string, taskId: string, statusTask: boolean) => void
   changeTitleSpan: (todolistId: string, taskId: string, title: string) => void
   changedFilter: (todolistId: string, filter: ChangeStatusTasksType) => void
+  changeTitleTodoList: (todolistId: string, title: string) => void
 }
 
 
@@ -27,7 +28,8 @@ const TodoList: FC<TodoListType> = (props) => {
     removeTask,
     changeStatusTask,
     changeTitleSpan,
-    changedFilter
+    changedFilter,
+    changeTitleTodoList
   } = props
 
   const [title, setTitle] = useState('');
@@ -54,9 +56,15 @@ const TodoList: FC<TodoListType> = (props) => {
     changeTitleSpan(todolistId, taskId, title)
   }
 
+  const changeTitleTodolistHandler = (todolistId: string, title: string) => {
+    changeTitleTodoList(todolistId, title)
+  }
+
+
   return (
     <div>
-      <span>{titleTodoList}</span>
+      <EditableSpan title={titleTodoList} callback={(title) => changeTitleTodolistHandler(todolistId, title)}/>
+
       <button>X</button>
       <ul>
         <input type={'text'} value={title} onChange={onChangeInput}/>
