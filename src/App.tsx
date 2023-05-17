@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {ChangeEvent, useState} from 'react'
+import {useState} from 'react'
 import './App.css';
 import TodoList from './TodoList';
 import {v1} from 'uuid';
@@ -65,9 +65,7 @@ function App() {
     })
   }
 
-  const changedInput = (event: ChangeEvent<HTMLInputElement>) => {
-    // setTitle(event.currentTarget.value)
-  }
+
 
   const addTask = (todolistId: string, title: string) => {
     let newTask = {id: v1(), title, isDone: false}
@@ -81,6 +79,15 @@ function App() {
   const changedFilter = (todolistId: string, filterValue: ChangeStatusTasksType) => {
 
     setTodolist(todolists.map(todolist => todolist.id === todolistId ? {...todolist, filter: filterValue} : todolist))
+  }
+
+  const updateTitleSpan = (todolistId: string, taskId: string, title: string) => {
+    setTasks({
+      ...tasks,
+      [todolistId]: tasks[todolistId].map(task => task.id === taskId
+        ? {...task, title}
+        : task)
+    })
   }
 
   return (
@@ -97,7 +104,8 @@ function App() {
             taskForTodolist = allTask.filter(task => task.isDone)
           }
 
-          return (<TodoList key={todolist.id}
+          return (<TodoList
+            key={todolist.id}
             titleTodoList={todolist.title}
             titleFilter={todolist.filter}
             todolistId={todolist.id}
@@ -105,7 +113,7 @@ function App() {
             addTask={addTask}
             removeTask={removeTask}
             changeStatusTask={changeStatusTask}
-            changedInput={changedInput}
+            changeTitleSpan={updateTitleSpan}
             changedFilter={changedFilter}
           />)
         }
