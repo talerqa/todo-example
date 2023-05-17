@@ -1,8 +1,9 @@
 import {ChangeStatusTasksType, taskType} from './App';
 import * as React from 'react';
-import {ChangeEvent, FC, useState} from 'react';
+import {FC, useState} from 'react';
 import ButtonFilterStatus from './ButtonFilterStatus';
 import EditableSpan from './EditableSpan';
+import SuperInput from './SuperInput';
 
 type TodoListType = {
   todolistId: string
@@ -15,6 +16,8 @@ type TodoListType = {
   changeTitleSpan: (todolistId: string, taskId: string, title: string) => void
   changedFilter: (todolistId: string, filter: ChangeStatusTasksType) => void
   changeTitleTodoList: (todolistId: string, title: string) => void
+  removeTodolist: (todolistId: string) => void
+
 }
 
 
@@ -29,24 +32,26 @@ const TodoList: FC<TodoListType> = (props) => {
     changeStatusTask,
     changeTitleSpan,
     changedFilter,
-    changeTitleTodoList
+    changeTitleTodoList,
+    removeTodolist,
+
   } = props
 
   const [title, setTitle] = useState('');
-
 
   const onChangeFilter = (todolistId: string, filter: ChangeStatusTasksType) => {
     changedFilter(todolistId, filter)
   }
 
-  const onChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.currentTarget.value)
+  const onChangeInput = (title: string) => {
+    setTitle(title)
   }
 
-  const addTaskHandler = (todolistId: string) => {
+  const addTaskHandler = (todolistId: string, title: string) => {
     addTask(todolistId, title)
     setTitle('')
   }
+
 
   const removeTaskHandler = (todolistId: string, taskId: string) => {
     removeTask(todolistId, taskId)
@@ -60,16 +65,19 @@ const TodoList: FC<TodoListType> = (props) => {
     changeTitleTodoList(todolistId, title)
   }
 
+  const removeTodolistHandler = (todolistId: string) => {
+    removeTodolist(todolistId)
+  }
 
   return (
     <div>
       <EditableSpan title={titleTodoList} callback={(title) => changeTitleTodolistHandler(todolistId, title)}/>
-
-      <button>X</button>
+      <button onClick={() => removeTodolistHandler(todolistId)}>X</button>
       <ul>
-        <input type={'text'} value={title} onChange={onChangeInput}/>
-        <button onClick={() => addTaskHandler(todolistId)}>+
-        </button>
+        {/*<input type={'text'} value={title} onChange={onChangeInput}/>*/}
+        <SuperInput
+          callback={(title) => addTaskHandler(todolistId, title)}/>
+
         {task.map(task => {
           return (
             <div key={task.id} style={{display: 'flex'}}>
@@ -85,7 +93,6 @@ const TodoList: FC<TodoListType> = (props) => {
                 callback={(title) => changeTitleSpanHandler(todolistId, task.id, title)}
               />
 
-
               <button onClick={() => removeTaskHandler(todolistId, task.id)}>x
               </button>
             </div>
@@ -96,7 +103,6 @@ const TodoList: FC<TodoListType> = (props) => {
       <ButtonFilterStatus
         filter={titleFilter}
         callback={(filter) => onChangeFilter(todolistId, filter)}/>
-
     </div>
   )
 }

@@ -2,7 +2,7 @@ import {tasksType} from '../App';
 import * as React from 'react'
 import {v1} from 'uuid';
 
-export const tasksReducer = (state: tasksType, action: CommonType) => {
+export const tasksReducer = (state: tasksType, action: CommonType): tasksType => {
   switch (action.type) {
     case 'ADD-TASK' : {
       return {
@@ -38,18 +38,25 @@ export const tasksReducer = (state: tasksType, action: CommonType) => {
           : task)
       }
     }
+    case 'ADD-TASK-EMPTY' : {
+      return {
+        ...state,
+        [action.payload.todolistId]: []
+      }
+    }
 
     default:
       return state
   }
 }
 
-type CommonType = AddTaskACType | RemoveTaskACType | ChangeStatusTaskType | UpdateTitleSpanType
+type CommonType = AddTaskACType | RemoveTaskACType | ChangeStatusTaskACType | UpdateTitleSpanType | addTaskEmptyType
 
 type AddTaskACType = ReturnType<typeof addTaskAC>
 type RemoveTaskACType = ReturnType<typeof removeTaskAC>
-type ChangeStatusTaskType = ReturnType<typeof changeStatusTaskAC>
+type ChangeStatusTaskACType = ReturnType<typeof changeStatusTaskAC>
 type UpdateTitleSpanType = ReturnType<typeof updateTitleSpaAC>
+type addTaskEmptyType = ReturnType<typeof addTaskEmptyAC>
 
 export const addTaskAC = (todolistId: string, title: string) => {
   return {
@@ -89,6 +96,15 @@ export const updateTitleSpaAC = (todolistId: string, taskId: string, title: stri
       todolistId,
       taskId,
       title
+    }
+  } as const
+}
+
+export const addTaskEmptyAC = (todolistId: string) => {
+  return {
+    type: 'ADD-TASK-EMPTY',
+    payload: {
+      todolistId,
     }
   } as const
 }

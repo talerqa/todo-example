@@ -1,11 +1,27 @@
 import * as React from 'react'
-import {useReducer, useState} from 'react'
+import {useReducer} from 'react'
 import './App.css';
 import TodoList from './TodoList';
 import {v1} from 'uuid';
-import {addTaskAC, changeStatusTaskAC, removeTaskAC, tasksReducer, updateTitleSpaAC} from './Reducers/tasksReducer';
+import {
+  addTaskAC,
+  addTaskEmptyAC,
+  changeStatusTaskAC,
+  removeTaskAC,
+  tasksReducer,
+  updateTitleSpaAC
+} from './Reducers/tasksReducer';
+import SuperInput from './SuperInput';
+import {
+  addTodolistAC,
+  changeFilterAC,
+  changeTitleAC,
+  removeTodolistAC,
+  todolistReducer
+} from './Reducers/todolistReducer';
 
 export type ChangeStatusTasksType = 'all' | 'active' | 'completed'
+
 export type taskType = {
   id: string
   title: string
@@ -26,7 +42,7 @@ function App() {
   let todolistId1 = v1()
   let todolistId2 = v1()
 
-  let [todolists, setTodolist] = useState<Array<TodolistsType>>([
+  let [todolists, dispatchTodolist] = useReducer(todolistReducer, [
     {id: todolistId1, title: 'What to learn', filter: 'all'},
     {id: todolistId2, title: 'What to buy', filter: 'all'},
   ]);
@@ -61,47 +77,63 @@ function App() {
     dispatchTasks(changeStatusTaskAC(todolistId, taskId, statusTask))
   }
 
-  const changedFilter = (todolistId: string, filterValue: ChangeStatusTasksType) => {
-    setTodolist(todolists.map(todolist => todolist.id === todolistId ? {...todolist, filter: filterValue} : todolist))
-  }
-
   const updateTitleSpan = (todolistId: string, taskId: string, title: string) => {
     dispatchTasks(updateTitleSpaAC(todolistId, taskId, title))
   }
 
-  const changeTitleTodoList = (todolistId: string, title: string) => {
-    setTodolist(todolists.map( todolist => todolist.id === todolistId
-    ? {...todolist, title}
-    : todolist))
+  ////////////// For todolist
+  const changedFilter = (todolistId: string, filterValue: ChangeStatusTasksType) => {
+    dispatchTodolist(changeFilterAC(todolistId, filterValue))
   }
 
+  const changeTitleTodoList = (todolistId: string, title: string) => {
+    dispatchTodolist(changeTitleAC(todolistId, title))
+  }
+
+  const removeTodolist = (todolistId: string) => {
+    dispatchTodolist(removeTodolistAC(todolistId))
+  }
+
+  const addTodolist = (title: string) => {
+    let todolistId = v1()
+    dispatchTodolist(addTodolistAC(todolistId, title))
+    dispatchTasks(addTaskEmptyAC(todolistId))
+  }
   return (
     <div className="App">
+
+      <SuperInput callback={(title) => {
+        addTodolist(title)
+      }}/>
+
       {todolists.map(todolist => {
-          let allTask = tasks[todolist.id]
-          let taskForTodolist = allTask
 
-          if (todolist.filter === 'active') {
-            taskForTodolist = allTask.filter(task => !task.isDone)
-          }
+        let allTask = tasks[todolist.id]
+        let taskForTodolist = allTask
 
-          if (todolist.filter === 'completed') {
-            taskForTodolist = allTask.filter(task => task.isDone)
-          }
+        if (todolist.filter === 'active') {
+          taskForTodolist = allTask.filter(task => !task.isDone)
+        }
 
-          return (<TodoList
-            key={todolist.id}
-            titleTodoList={todolist.title}
-            titleFilter={todolist.filter}
-            todolistId={todolist.id}
-            task={taskForTodolist}
-            addTask={addTask}
-            removeTask={removeTask}
-            changeStatusTask={changeStatusTask}
-            changeTitleSpan={updateTitleSpan}
-            changedFilter={changedFilter}
-            changeTitleTodoList={changeTitleTodoList}
-          />)
+        if (todolist.filter === 'completed') {
+          taskForTodolist = allTask.filter(task => task.isDone)
+        }
+
+        return (<TodoList
+          key={todolist.id}
+          titleTodoList={todolist.title}
+          titleFilter={todolist.filter}
+          todolistId={todolist.id}
+          task={taskForTodolist}
+          addTask={addTask}
+          removeTask={removeTask}
+          changeStatusTask={changeStatusTask}
+          changeTitleSpan={updateTitleSpan}
+          changedFilter={changedFilter}
+          changeTitleTodoList={changeTitleTodoList}
+          removeTodolist={removeTodolist}
+
+        />)
         }
       )}
     </div>
