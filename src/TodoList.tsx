@@ -43,6 +43,7 @@ const TodoList: FC<TodoListType> = (props) => {
 
   const addTaskHandler = (todolistId: string) => {
     addTask(todolistId, title)
+    setTitle('')
   }
 
   const removeTaskHandler = (todolistId: string, taskId: string) => {

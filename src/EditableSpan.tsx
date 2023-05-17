@@ -9,15 +9,15 @@ type EditableSpanType = {
 const EditableSpan = (props: EditableSpanType) => {
 
   const [newTitle, setNewTitle] = useState(props.title)
-
   const [active, setActive] = useState(true)
 
   const onChangeTitleSpan = (e: ChangeEvent<HTMLInputElement>) => {
+
     setNewTitle(e.currentTarget.value)
-    props.callback(newTitle)
   }
   const onChangeStatusTitle = () => {
     setActive(!active)
+    props.callback(newTitle)
   }
   return (
     <div>
