@@ -3,7 +3,7 @@ import {useReducer, useState} from 'react'
 import './App.css';
 import TodoList from './TodoList';
 import {v1} from 'uuid';
-import {addTaskAC, tasksReducer} from './Reducers/tasksReducer';
+import {addTaskAC, changeStatusTaskAC, removeTaskAC, tasksReducer, updateTitleSpaAC} from './Reducers/tasksReducer';
 
 export type ChangeStatusTasksType = 'all' | 'active' | 'completed'
 export type taskType = {
@@ -54,32 +54,19 @@ function App() {
   }
 
   const removeTask = (todolistId: string, taskId: string) => {
-      // setTasks({
-      //   ...tasks,
-      //   [todolistId]: [...tasks[todolistId].filter(fl => fl.id !== taskId)]
-      // })
+    dispatchTasks(removeTaskAC(todolistId, taskId))
   }
 
   const changeStatusTask = (todolistId: string, taskId: string, statusTask: boolean) => {
-    // setTasks({
-    //   ...tasks,
-    //   [todolistId]: [...tasks[todolistId].map(m => m.id === taskId
-    //     ? {...m, isDone: !statusTask} : m)]
-    // })
+    dispatchTasks(changeStatusTaskAC(todolistId, taskId, statusTask))
   }
 
-
   const changedFilter = (todolistId: string, filterValue: ChangeStatusTasksType) => {
-    // setTodolist(todolists.map(todolist => todolist.id === todolistId ? {...todolist, filter: filterValue} : todolist))
+    setTodolist(todolists.map(todolist => todolist.id === todolistId ? {...todolist, filter: filterValue} : todolist))
   }
 
   const updateTitleSpan = (todolistId: string, taskId: string, title: string) => {
-    // setTasks({
-    //   ...tasks,
-    //   [todolistId]: tasks[todolistId].map(task => task.id === taskId
-    //     ? {...task, title}
-    //     : task)
-    // })
+    dispatchTasks(updateTitleSpaAC(todolistId, taskId, title))
   }
 
   return (
