@@ -1,9 +1,11 @@
-import {tasksType} from '../App';
 import * as React from 'react'
 import {v1} from 'uuid';
 import {AddTodolistACType, RemoveTodolistACType} from './todolistReducer';
+import {TasksType} from '../AppWithRedux';
 
-export const tasksReducer = (state: tasksType, action: CommonType): tasksType => {
+const initState: TasksType = {}
+
+export const tasksReducer = (state: TasksType = initState, action: CommonType): TasksType => {
   switch (action.type) {
     case 'ADD-TASK' : {
       return {
@@ -39,12 +41,6 @@ export const tasksReducer = (state: tasksType, action: CommonType): tasksType =>
           : task)
       }
     }
-    // case 'ADD-TASK-EMPTY' : {
-    //   return {
-    //     ...state,
-    //     [action.payload.todolistId]: []
-    //   }
-    // }
 
     case 'ADD-TODOLIST': {
       const stateCopy = {...state};
@@ -58,7 +54,6 @@ export const tasksReducer = (state: tasksType, action: CommonType): tasksType =>
       delete stateCopy[action.payload.todolistId]
       return stateCopy;
     }
-
     default:
       return state
   }

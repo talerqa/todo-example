@@ -1,7 +1,11 @@
 import {ChangeStatusTasksType, TodolistsType} from '../App';
 import * as React from 'react'
 
-export const todolistReducer = (state: TodolistsType[], action: CommonType): TodolistsType[] => {
+
+
+const initState: Array<TodolistsType> = []
+
+export const todolistReducer = (state: Array<TodolistsType> = initState, action: CommonType): TodolistsType[] => {
   switch (action.type) {
     case 'ADD-TODOLIST' : {
       let newTodoList: TodolistsType = {id: action.payload.todolistId, title: action.payload.title, filter: 'all'}
@@ -22,7 +26,6 @@ export const todolistReducer = (state: TodolistsType[], action: CommonType): Tod
       return state.map(todolist => todolist.id === action.payload.todolistId
         ? {...todolist, filter: action.payload.filterValue} : todolist)
     }
-
     default:
       return state
   }
