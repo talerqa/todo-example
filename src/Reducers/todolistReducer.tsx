@@ -28,11 +28,11 @@ export const todolistReducer = (state: TodolistsType[], action: CommonType): Tod
   }
 }
 
-type CommonType = AddTaskACType | ChangeTitleACType | ChangeFilterACType | RemoveTodolistACType
-type AddTaskACType = ReturnType<typeof addTodolistAC>
-type ChangeTitleACType = ReturnType<typeof changeTitleAC>
-type ChangeFilterACType = ReturnType<typeof changeFilterAC>
-type RemoveTodolistACType = ReturnType<typeof removeTodolistAC>
+type CommonType = AddTodolistACType | ChangeTitleTodolistACType | ChangeFilterTodolistACType | RemoveTodolistACType
+export type AddTodolistACType = ReturnType<typeof addTodolistAC>
+type ChangeTitleTodolistACType = ReturnType<typeof changeTitleAC>
+type ChangeFilterTodolistACType = ReturnType<typeof changeFilterAC>
+export type RemoveTodolistACType = ReturnType<typeof removeTodolistAC>
 
 export const addTodolistAC = (todolistId: string, title: string) => {
   return {

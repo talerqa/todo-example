@@ -92,12 +92,14 @@ function App() {
 
   const removeTodolist = (todolistId: string) => {
     dispatchTodolist(removeTodolistAC(todolistId))
+    dispatchTasks(removeTodolistAC(todolistId))
   }
 
   const addTodolist = (title: string) => {
     let todolistId = v1()
-    dispatchTodolist(addTodolistAC(todolistId, title))
-    dispatchTasks(addTaskEmptyAC(todolistId))
+    const action = addTodolistAC(todolistId, title)
+    dispatchTodolist(action)
+    dispatchTasks(action)
   }
   return (
     <div className="App">

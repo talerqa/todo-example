@@ -1,6 +1,7 @@
 import {tasksType} from '../App';
 import * as React from 'react'
 import {v1} from 'uuid';
+import {AddTodolistACType, RemoveTodolistACType} from './todolistReducer';
 
 export const tasksReducer = (state: tasksType, action: CommonType): tasksType => {
   switch (action.type) {
@@ -38,11 +39,24 @@ export const tasksReducer = (state: tasksType, action: CommonType): tasksType =>
           : task)
       }
     }
-    case 'ADD-TASK-EMPTY' : {
-      return {
-        ...state,
-        [action.payload.todolistId]: []
-      }
+    // case 'ADD-TASK-EMPTY' : {
+    //   return {
+    //     ...state,
+    //     [action.payload.todolistId]: []
+    //   }
+    // }
+
+    case 'ADD-TODOLIST': {
+      const stateCopy = {...state};
+      stateCopy[action.payload.todolistId] = [];
+
+      return stateCopy;
+    }
+
+    case 'REMOVE-TODOLIST': {
+      const stateCopy = {...state};
+      delete stateCopy[action.payload.todolistId]
+      return stateCopy;
     }
 
     default:
@@ -50,7 +64,7 @@ export const tasksReducer = (state: tasksType, action: CommonType): tasksType =>
   }
 }
 
-type CommonType = AddTaskACType | RemoveTaskACType | ChangeStatusTaskACType | UpdateTitleSpanType | addTaskEmptyType
+type CommonType = AddTaskACType | RemoveTaskACType | ChangeStatusTaskACType | UpdateTitleSpanType | addTaskEmptyType | RemoveTodolistACType | AddTodolistACType
 
 type AddTaskACType = ReturnType<typeof addTaskAC>
 type RemoveTaskACType = ReturnType<typeof removeTaskAC>
