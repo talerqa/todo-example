@@ -55,7 +55,6 @@ export const TodoListWithRedux: FC<TodoListType> = (props) => {
 
   let allTask = tasks
   let taskForTodolist = allTask
-
   if (titleFilter === 'active') {
     taskForTodolist = allTask.filter(task => !task.isDone)
   }

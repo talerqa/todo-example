@@ -1,21 +1,20 @@
 import React, {Fragment, useCallback, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {selectUsers, selectUsersCount} from 'store/selectors';
-import {createUser, plusUserCount} from 'store/actions';
+import {selectUsers, selectUsersCount} from './store/selectors';
+import {createUser, plusUserCount} from './store/actions';
 import {v1} from 'uuid';
-import {CustomButton, UsersCountValue} from 'components';
-import {UsersList} from 'components/UsersList';
-import {generateRandomName} from 'utils';
-import {SetTimeoutType} from 'types';
+import {CustomButton, UsersCountValue} from './components';
+import {UsersList} from './components/UsersList';
+import {generateRandomName} from './utils';
+import {SetTimeoutType} from './types';
 
 const DELAY = 500;
 
 export const App = () => {
+  const dispatch = useDispatch();
 
   const users = useSelector(selectUsers);
   const usersCount = useSelector(selectUsersCount);
-
-  const dispatch = useDispatch();
 
   const [isAddNewUser, setIsAddNewUser] = useState<boolean>(false);
 
@@ -35,18 +34,21 @@ export const App = () => {
 
   const handleClick = useCallback((): void => {
     dispatch(createUser({id: v1(), name: generateRandomName()}));
+
     setIsAddNewUser(true);
   }, [dispatch]);
 
   return (
     <Fragment>
-      <UsersCountValue usersCount={usersCount}/>
+      <UsersCountValue usersCount={usersCount} />
+
       <CustomButton
         title="Click Me"
         isButtonDisabled={isAddNewUser}
         onClick={handleClick}
       />
-      <UsersList users={users}/>
+
+      <UsersList users={users} />
     </Fragment>
   );
 };
